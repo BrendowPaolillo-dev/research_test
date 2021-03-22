@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import api from "./services/api";
-import {Radio} from "antd";
+import "./Research.css"
 
 let optVector = []
 
-class Research extends Component{
+class Research extends Component {
     state = {
         pages: "",
         pageIndex: 0,
@@ -13,30 +13,29 @@ class Research extends Component{
         isLoaded: false,
         answeredPage: [],
     }
-    
 
-    componentDidMount(){
+
+    componentDidMount() {
         this.getResearchData()
     }
 
-    async getResearchData(){
+
+    async getResearchData() {
         const questions = []
-        const answers  = []
+        const answers = []
         const response = await api.get("/api/dados/estrutura-basica")
         // console.log(response)
-        
-        response.data.perguntasERespostas.map((item, i ) => {
+
+        response.data.perguntasERespostas.map((item, i) => {
             questions.push(item.pergunta)
             answers.push(item.respostas)
         })
-        this.setState( {pages: response.data.folhas,
-                        questions: questions,
-                        answers: answers, 
-                        isLoaded: true,} )
-        // console.log(this.state)
-        // console.log(this.state.pages)
-        // console.log(questions)
-        // console.log(answers)
+        this.setState({
+            pages: response.data.folhas,
+            questions: questions,
+            answers: answers,
+            isLoaded: true,
+        })
     }
 
     handleAnswer = (e) => {
@@ -45,46 +44,50 @@ class Research extends Component{
 
     fillAnsweredPage = (questao, opcao) => {
         let obj = {}
-        if (optVector.length === 0){
-            obj = {"folha": this.state.pages[this.state.pageIndex].numero, 
-                    "opcaoResposta": opcao, 
-                    "pergunta": this.state.questions[questao].numero, 
-                    "pesquisa": this.state.pages[this.state.pageIndex].pesquisa.id}
+        if (optVector.length === 0) {
+            obj = {
+                "folha": this.state.pages[this.state.pageIndex].numero,
+                "opcaoResposta": opcao,
+                "pergunta": this.state.questions[questao].numero,
+                "pesquisa": this.state.pages[this.state.pageIndex].pesquisa.id
+            }
             optVector.push(obj)
-        }else{
-            
+        } else {
+
             optVector.map((item, id) => {
-                if (this.state.questions[questao].numero == item.pergunta){
+                if (this.state.questions[questao].numero == item.pergunta) {
                     let remove = optVector.splice(id, 1)
                 }
             })
-            
-            obj = {"folha": this.state.pages[this.state.pageIndex].numero, 
-                "opcaoResposta": opcao, 
-                "pergunta": this.state.questions[questao].numero, 
-                "pesquisa": this.state.pages[this.state.pageIndex].pesquisa.id}
+
+            obj = {
+                "folha": this.state.pages[this.state.pageIndex].numero,
+                "opcaoResposta": opcao,
+                "pergunta": this.state.questions[questao].numero,
+                "pesquisa": this.state.pages[this.state.pageIndex].pesquisa.id
+            }
             optVector.push(obj)
 
         }
-        
+
         // console.log(optVector)
     }
 
     showAnswers = (id) => {
         let answersObj = this.state.answers[id]
-        // console.log(answersObj)
         return (
             <div>
-                <Radio.Group >
-                    {answersObj.map((options, idA) => {
-                        return (
-                        <Radio value = {options.opcao} 
-                        onChange = {() => this.fillAnsweredPage(id, options.opcao)}>
-                            {options.descricao}
-                        </Radio>
-                    
-                    )})}
-                </Radio.Group>
+                {answersObj.map((options, idA) => {
+                    // console.log(options)
+                    return (
+                        <div id={`Radio_${this.state.pageIndex}`}>
+                            <input type="radio" value={options.opcao} name = {`input_${id}`}
+                            onClick = {() => this.fillAnsweredPage(id, options.opcao)}
+                            />
+                            <label >{options.descricao}</label>
+                        </div>
+                    )
+                })}
             </div>
         )
     }
@@ -93,8 +96,8 @@ class Research extends Component{
         // console.log(this.state.questions)
         return this.state.questions.map((questionObj, id) => {
             return (
-                <div>
-                    <h4>Pergunta {questionObj.numero}</h4>
+                <div className="Questions">
+                    <h4 className="QNumber">Pergunta {questionObj.numero}</h4>
                     <text>
                         {questionObj.descricao}:
                     </text>
@@ -105,14 +108,14 @@ class Research extends Component{
     }
 
     mapPages = () => {
-        if (this.state.isLoaded){
+        if (this.state.isLoaded) {
             // console.log(this.state.pages[this.state.pageIndex])
-            let pageObj =  this.state.pages[this.state.pageIndex]
+            let pageObj = this.state.pages[this.state.pageIndex]
             return (
                 <div>
                     <h2>Página {pageObj.numero}</h2>
                     {this.showQuestions()}
-                    
+
                 </div>
             )
         }
@@ -121,41 +124,90 @@ class Research extends Component{
     changePageIndex = (sum) => {
         let index = this.state.pageIndex + sum
         // console.log(index)
-        this.setState({pageIndex: index})
+        this.setState({
+            pageIndex: index,
+            answeredPage: []
+        })
+        document.getElementById("teste").reset();
+        optVector = []
     }
 
-    handleSubmit = () => {
-        this.setState({answeredPage: optVector}, () => {
+    storageResearch = () => {
+        this.setState({ answeredPage: optVector }, () => {
             let response = api.post("/api/dados/enviar-entrevistados", this.state.answeredPage)
             console.log(response)
+            localStorage.setItem("tempResearch" + this.state.answeredPage[0].folha, JSON.stringify(this.state.answeredPage))
         })
     }
 
-    render(){
+    handleSubmit = (e) => {
+        e.preventDefault()
+        const response = JSON.parse(localStorage.getItem("tempResearch1"))
+        const response2 = JSON.parse(localStorage.getItem("tempResearch2"))
+        const response3 = JSON.parse(localStorage.getItem("tempResearch3"))
+        console.log(optVector)
+        if (optVector.length > 0) {
+            if (response) {
+                // console.log(response)
+                if (response[0].folha === optVector[0].folha) {
+                    console.log("Nao eh possivel preencher essa pagina")
+                }else {
+                    this.storageResearch()
+                    this.handleBack()
+                }
+            } else if (response2) {
+                if (response2[0].folha === optVector[0].folha) {
+                    console.log("Nao eh possivel preencher essa pagina")
+                }else {
+                    this.storageResearch()
+                    this.handleBack()
+                }
+            } else if (response3) {
+                if (response3[0].folha === optVector[0].folha) {
+                    console.log("Nao eh possivel preencher essa pagina")
+                }else {
+                    this.storageResearch()
+                    this.handleBack()
+                }
+            }else {
+                this.storageResearch()
+                this.handleBack()
+            } 
+        }
+    }
 
-        return(
-            <div className = "research">
-                <h1> Pesquisa </h1>
-                
-                    {
-                        this.mapPages() 
-                    }
-                    <br/>
-                    <button onClick = {this.handleSubmit}>Enviar</button>
-                    <br/>
-                    {
-                        this.state.pageIndex === 0 ? 
-                            <button onClick = {() => this.changePageIndex(1)}>Página seguinte</button>
-                        : this.state.pageIndex === 1 ? 
-                        <div>
-                            <button onClick = {() => this.changePageIndex(-1)}>Página anterior</button>
-                            <button onClick = {() => this.changePageIndex(1)}>Página seguinte</button>
-                        </div>
-                        :   <button onClick = {() => this.changePageIndex(-1)}>Página anterior</button>
+    handleBack = () => {
+        this.props.history.goBack()
+    }
 
+    render() {
+
+        return (
+            <div className="research">
+                <button onClick={this.handleBack}>Voltar</button>
+                <form className="Form" id={"teste"} onSubmit={this.handleSubmit}>
+                    <h1> Pesquisa </h1>
+
+                    {
+                        this.mapPages()
                     }
-                    
-    
+                    <br />
+                    <button type="submit" >Enviar</button>
+                    <br />
+                </form>
+                {
+                    this.state.pageIndex === 0 ?
+                        <button className = "NextB"onClick={() => this.changePageIndex(1)}>Página seguinte</button>
+                        : this.state.pageIndex === 1 ?
+                            <div>
+                                <button className = "PrevB" onClick={() => this.changePageIndex(-1)}>Página anterior</button>
+                                <button className = "NextB" onClick={() => this.changePageIndex(1)}>Página seguinte</button>
+                            </div>
+                            : <button className = "PrevB" onClick={() => this.changePageIndex(-1)}>Página anterior</button>
+
+                }
+
+
             </div>
         )
     }

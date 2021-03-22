@@ -1,0 +1,24 @@
+.Questions{
+    background-color: white;
+    max-width: 50%;
+    margin: 10px auto;
+    padding: 20px 50px ;
+    text-align: start;
+}
+.QNumber{
+    padding: 5px 5px ;
+    border-block: groove;
+}
+.Form{
+    margin: 0 auto;
+    text-align: center;
+}
+
+.NextB{
+    position: absolute;
+    right: 0;
+}
+.PrevB{
+    position: absolute;
+    left: 0;
+}

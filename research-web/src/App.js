@@ -1,7 +1,7 @@
 import './App.css';
 import React, { Component } from 'react';
 import api from "./services/api";
-import { login } from "./services/auth";
+import { isAuthenticated, login } from "./services/auth";
 import { withRouter } from "react-router-dom";
 
 
@@ -14,7 +14,16 @@ class App extends Component{
     postResponse: false,
   }
 
-  handleValidation(){
+  componentDidMount(){
+    console.log(isAuthenticated())
+    if (isAuthenticated()){
+      this.props.history.push("/dashboard");
+    }else{
+      this.props.history.push("/");
+    }
+  }
+
+  handleValidation = () => {
     let email = this.state.email;
     let password = this.state.password;
     let errors = {};
@@ -52,6 +61,12 @@ class App extends Component{
     return formIsValid;
   }
 
+  initDB = async () => {
+    const response = await api.post("/api/dados/initDB")
+    this.setState({isInitiated: true})
+    console.log(response)
+  }
+
   handleSign = async e => {
     e.preventDefault();
     const { email, password, errors } = this.state;
@@ -62,13 +77,13 @@ class App extends Component{
         this.setState({ postResponse: errors["password"] });
       }else{
         this.setState({ postResponse: "Preencha todos os dados para se cadastrar" });
-        
       }
     } else {
       try {
         const response = await api.post("/login", { email, password });
         this.setState({ postResponse: response.status });
-        login(response.data.token);
+        login(response.data.token)
+        this.initDB()
         this.props.history.push("/dashboard");
       } catch (err) {
         console.log(err);
@@ -84,25 +99,19 @@ class App extends Component{
       <div className = "App">
         <h1>Login</h1>
         <form name="loginform" className="loginform" onSubmit= {this.handleSign}>
-          <input name= "email" type="email" 
+          <input name= "email" type="email" className="logininput"
           placeholder="Email" 
           onChange={e => this.setState({ email: e.target.value })} />
           
           <br/>
-          <input name= "password" type="password" 
+          <input name= "password" type="password" className="logininput"
           placeholder="Senha" 
           onChange={e => this.setState({ password: e.target.value })}/>
           
           <br/>
-          <button type="submit" >Entrar</button>
+          <button type="submit" className="loginbutton">Entrar</button>
           
           <br/>
-          <div>
-            Response: 
-            {
-              postResponse && JSON.stringify(postResponse)
-            }
-          </div>
         </form>
       </div>
     )

@@ -1,30 +1,55 @@
 import React, { Component } from 'react';
-import api from "./services/api";
+import { logout } from './services/auth'
+import './Dashboard.css'
+import { Card } from 'antd';
 
-class Dashboard extends Component
-{   
-    
-    componentDidMount(){
-        this.initDB()
-    }
-    
-    initDB = async () => {
-        const response = await api.post("/api/dados/initDB")
-        console.log(response)
-    }
-    
-    handleClick = () => {
+const { Meta } = Card;
+
+class Dashboard extends Component {
+
+    handleClickAdd = () => {
         this.props.history.push("/research");
     }
-    
-    render(){
-        return(
+
+    handleClickVisu = () => {
+        this.props.history.push("/visualize");
+    }
+
+    handleLogout = () => {
+        logout()
+        this.props.history.push("/")
+    }
+
+    render() {
+        return (
             <div>
-                <h1>Dashboard</h1>
-                <button onClick = {this.handleClick}>Adicionar uma entrevista </button>
-                <button>Visualizar respostas</button>
+                <div className="logout">
+                    <button onClick={this.handleLogout}>Logout</button>
+                </div>
+                <div className="Dashboard">
+                    <h1 className="Title">Dashboard</h1>
+                    <div className="Cards">
+                        <Card
+                            hoverable
+                            cover={<img alt="survey" src={require("./assets/survey.png")} />}
+                            onClick={this.handleClickAdd}
+                        >
+                            <Meta title="Adicionar uma entrevista" />
+                        </Card>
+                        <Card
+                            hoverable
+                            cover={<img alt="data-table" src={require("./assets/data-table.png")} />}
+                            onClick={this.handleClickVisu}
+                        >
+                            <Meta title="Visualizar respostas" />
+                        </Card>
+
+                    </div>
+                    {/* <button onClick={this.handleClickAdd}>Adicionar uma entrevista </button> */}
+                    {/* <button onClick={this.handleClickVisu}>Visualizar respostas</button> */}
+                </div>
             </div>
         )
-    } 
+    }
 }
 export default Dashboard;

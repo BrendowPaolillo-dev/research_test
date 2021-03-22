@@ -5,5 +5,8 @@ export const login = token => {
   localStorage.setItem(TOKEN_KEY, token);
 };
 export const logout = () => {
+  localStorage.removeItem("tempResearch1")
+  localStorage.removeItem("tempResearch2")
+  localStorage.removeItem("tempResearch3")
   localStorage.removeItem(TOKEN_KEY);
 };
