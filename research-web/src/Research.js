@@ -151,23 +151,14 @@ class Research extends Component {
         const response3 = JSON.parse(localStorage.getItem("tempResearch3"))
         //console.log(optVector)
         if (optVector.length > 0) {
-            if (response) {
+            if (response || response2 || response3 ) {
                 // console.log(response)
-                if (response[0].folha === optVector[0].folha) {
+                if (response !== null && response[0].folha === optVector[0].folha) {
                     alert("Esta página já foi preenchida")
-                }else {
-                    this.storageResearch()
-                    this.handleBack()
-                }
-            } else if (response2) {
-                if (response2[0].folha === optVector[0].folha) {
+                }else if (response2 !== null && response2[0].folha === optVector[0].folha) {
                     alert("Esta página já foi preenchida")
-                }else {
-                    this.storageResearch()
-                    this.handleBack()
-                }
-            } else if (response3) {
-                if (response3[0].folha === optVector[0].folha) {
+                } 
+                else if (response3 !== null && response3[0].folha === optVector[0].folha) {
                     alert("Esta página já foi preenchida")
                 }else {
                     this.storageResearch()
