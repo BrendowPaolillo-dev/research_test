@@ -7,14 +7,17 @@ const { Meta } = Card;
 
 class Dashboard extends Component {
 
+    //Direciona para a página de pesquisas
     handleClickAdd = () => {
         this.props.history.push("/research");
     }
 
+    //Direciona para a página de visualização das pesquisas respondidas
     handleClickVisu = () => {
         this.props.history.push("/visualize");
     }
 
+    //Realiza o Logout
     handleLogout = () => {
         logout()
         this.props.history.push("/")
@@ -23,7 +26,7 @@ class Dashboard extends Component {
     render() {
         return (
             <div>
-                <div className="logout">
+                <div className="Logout">
                     <button onClick={this.handleLogout}>Logout</button>
                 </div>
                 <div className="Dashboard">
@@ -45,8 +48,6 @@ class Dashboard extends Component {
                         </Card>
 
                     </div>
-                    {/* <button onClick={this.handleClickAdd}>Adicionar uma entrevista </button> */}
-                    {/* <button onClick={this.handleClickVisu}>Visualizar respostas</button> */}
                 </div>
             </div>
         )

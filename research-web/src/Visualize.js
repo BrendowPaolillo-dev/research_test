@@ -32,6 +32,7 @@ class Visualize extends Component{
         loadedPages: [],
     }
 
+    //Carrega as pesquisas efetuadas
     componentDidMount(){
         const response = JSON.parse(localStorage.getItem("tempResearch1"))
         const response2 = JSON.parse(localStorage.getItem("tempResearch2"))
@@ -47,6 +48,7 @@ class Visualize extends Component{
         this.setState({loadedPages: data})
     }
 
+    //Recebe os dados para o preenchimento da tabela
     getData = () => {
         const data = []
         this.state.loadedPages.map((item, id) => {
@@ -57,15 +59,16 @@ class Visualize extends Component{
         return data
     }
     
+    //Volta para o dashboar
     handleBack = () => {
         this.props.history.goBack()
     }
 
     render(){
         return(
-            <div>
-                <button onClick={this.handleBack}>Voltar</button>
-                <h1>Visualização de respostas</h1>
+            <div className = "Visualize">
+                <button className = "Back"onClick={this.handleBack}>Voltar</button>
+                <h1 className = "Title">Visualização de respostas</h1>
                 <Table columns = {columns} dataSource = {this.getData()}></Table>
             </div>
         )

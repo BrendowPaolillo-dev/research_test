@@ -14,12 +14,12 @@ class Research extends Component {
         answeredPage: [],
     }
 
-
+    //Carrega as perguntas e respostas da pesquisa
     componentDidMount() {
         this.getResearchData()
     }
 
-
+    //Carrega as perguntas e respostas do BD para as pesquisas
     async getResearchData() {
         const questions = []
         const answers = []
@@ -38,10 +38,7 @@ class Research extends Component {
         })
     }
 
-    handleAnswer = (e) => {
-        console.log(e)
-    }
-
+    //Preenche uma estrutura auxiliar no formato da requisição, com as respostas do usuário
     fillAnsweredPage = (questao, opcao) => {
         let obj = {}
         if (optVector.length === 0) {
@@ -73,6 +70,7 @@ class Research extends Component {
         // console.log(optVector)
     }
 
+    //Mostra as respostas possíveis para cada pergunta
     showAnswers = (id) => {
         let answersObj = this.state.answers[id]
         return (
@@ -92,6 +90,7 @@ class Research extends Component {
         )
     }
 
+    //Mostras as perguntas
     showQuestions = () => {
         // console.log(this.state.questions)
         return this.state.questions.map((questionObj, id) => {
@@ -107,13 +106,14 @@ class Research extends Component {
         })
     }
 
+    //Mapeia as páginas das pesquisas
     mapPages = () => {
         if (this.state.isLoaded) {
             // console.log(this.state.pages[this.state.pageIndex])
             let pageObj = this.state.pages[this.state.pageIndex]
             return (
                 <div>
-                    <h2>Página {pageObj.numero}</h2>
+                    <h2 className ="Title" >Página {pageObj.numero}</h2>
                     {this.showQuestions()}
 
                 </div>
@@ -121,6 +121,7 @@ class Research extends Component {
         }
     }
 
+    //Troca o índice da página
     changePageIndex = (sum) => {
         let index = this.state.pageIndex + sum
         // console.log(index)
@@ -128,43 +129,46 @@ class Research extends Component {
             pageIndex: index,
             answeredPage: []
         })
-        document.getElementById("teste").reset();
+        document.getElementById("Form").reset();
         optVector = []
     }
 
+    //Envia a pesquisa preenchida para o banco de dados
     storageResearch = () => {
         this.setState({ answeredPage: optVector }, () => {
             let response = api.post("/api/dados/enviar-entrevistados", this.state.answeredPage)
-            console.log(response)
+            //console.log(response)
             localStorage.setItem("tempResearch" + this.state.answeredPage[0].folha, JSON.stringify(this.state.answeredPage))
+            alert("Sua pesquisa foi submetida")
         })
     }
 
+    //Verifica se a página já foi preenchida anteriormente
     handleSubmit = (e) => {
         e.preventDefault()
         const response = JSON.parse(localStorage.getItem("tempResearch1"))
         const response2 = JSON.parse(localStorage.getItem("tempResearch2"))
         const response3 = JSON.parse(localStorage.getItem("tempResearch3"))
-        console.log(optVector)
+        //console.log(optVector)
         if (optVector.length > 0) {
             if (response) {
                 // console.log(response)
                 if (response[0].folha === optVector[0].folha) {
-                    console.log("Nao eh possivel preencher essa pagina")
+                    alert("Esta página já foi preenchida")
                 }else {
                     this.storageResearch()
                     this.handleBack()
                 }
             } else if (response2) {
                 if (response2[0].folha === optVector[0].folha) {
-                    console.log("Nao eh possivel preencher essa pagina")
+                    alert("Esta página já foi preenchida")
                 }else {
                     this.storageResearch()
                     this.handleBack()
                 }
             } else if (response3) {
                 if (response3[0].folha === optVector[0].folha) {
-                    console.log("Nao eh possivel preencher essa pagina")
+                    alert("Esta página já foi preenchida")
                 }else {
                     this.storageResearch()
                     this.handleBack()
@@ -176,6 +180,7 @@ class Research extends Component {
         }
     }
 
+    //Volta para o dashboard
     handleBack = () => {
         this.props.history.goBack()
     }
@@ -183,10 +188,10 @@ class Research extends Component {
     render() {
 
         return (
-            <div className="research">
-                <button onClick={this.handleBack}>Voltar</button>
-                <form className="Form" id={"teste"} onSubmit={this.handleSubmit}>
-                    <h1> Pesquisa </h1>
+            <div className="Research">
+                <button className="Back" onClick={this.handleBack}>Voltar</button>
+                <form className="Form" id={"Form"} onSubmit={this.handleSubmit}>
+                    <h1 className ="Title"> Pesquisa </h1>
 
                     {
                         this.mapPages()
@@ -195,17 +200,19 @@ class Research extends Component {
                     <button type="submit" >Enviar</button>
                     <br />
                 </form>
+                <div className="pageB">
                 {
                     this.state.pageIndex === 0 ?
                         <button className = "NextB"onClick={() => this.changePageIndex(1)}>Página seguinte</button>
                         : this.state.pageIndex === 1 ?
-                            <div>
-                                <button className = "PrevB" onClick={() => this.changePageIndex(-1)}>Página anterior</button>
-                                <button className = "NextB" onClick={() => this.changePageIndex(1)}>Página seguinte</button>
-                            </div>
-                            : <button className = "PrevB" onClick={() => this.changePageIndex(-1)}>Página anterior</button>
-
+                                <div>
+                                    <button className = "PrevB" onClick={() => this.changePageIndex(-1)}>Página anterior</button>
+                                    <button className = "NextB" onClick={() => this.changePageIndex(1)}>Página seguinte</button>
+                                </div>
+                                : <button className = "PrevB" onClick={() => this.changePageIndex(-1)}>Página anterior</button>
+                                
                 }
+                </div>
 
 
             </div>

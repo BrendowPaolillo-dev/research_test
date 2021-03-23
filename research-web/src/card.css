@@ -4,7 +4,6 @@
             box-sizing: border-box;
     margin: auto 10px;
     padding: 0px;
-    width: 200px;
     color: rgba(0, 0, 0, 0.85);
     font-size: 14px;
     font-variant: tabular-nums;
@@ -19,7 +18,7 @@
   }
   .ant-card-hoverable {
     cursor: pointer;
-    
+    width: auto;
     max-height: 80%;
     max-width: 80%;
     min-height: 50%;

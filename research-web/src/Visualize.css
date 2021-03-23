@@ -1,2 +1,6 @@
-@import "./table.css"
+@import "./table.css";
 
+.Visualize .Title{
+    margin: 10px auto;
+    text-align: center;
+}

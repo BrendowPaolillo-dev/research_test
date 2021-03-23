@@ -16,9 +16,14 @@
 
 .NextB{
     position: absolute;
-    right: 0;
+    right: 20px;
 }
 .PrevB{
     position: absolute;
-    left: 0;
+    left: 20px;
+}
+
+.Research .Title{
+    margin: 10px auto;
+    text-align: center;
 }

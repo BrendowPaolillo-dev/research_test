@@ -1,26 +1,24 @@
-@media all and (min-width: 480px) {
-  .App {
-    padding: 60px 0;
-    min-width: 10%;
-    max-width: 50%;
-    margin: auto;
-    text-align: center;
-    border-radius: 20px;
-    background-color: whitesmoke;
-    display: block;
-  }
-
-  .loginform {
-    max-width: 100%;
-    margin: 0px auto;
-    position: relative;
-  }
-  .logininput{
-    margin: 10px auto;
-    max-width: 80%;
-  }
+.App {
+  padding: 60px 0;
+  min-width: 10%;
+  max-width: 50%;
+  margin: auto;
+  text-align: center;
+  border-radius: 20px;
+  background-color: whitesmoke;
+  display: block;
 }
- 
+
+.loginform {
+  max-width: 100%;
+  margin: 0px auto;
+  position: relative;
+}
+.logininput{
+  margin: 10px auto;
+  max-width: 80%;
+}
+
 #root .App{
   position: absolute;
   top: 30%;

@@ -14,8 +14,10 @@ class App extends Component{
     postResponse: false,
   }
 
+
+  //Verifica se o cliente já realizou o login  
   componentDidMount(){
-    console.log(isAuthenticated())
+    //console.log(isAuthenticated())
     if (isAuthenticated()){
       this.props.history.push("/dashboard");
     }else{
@@ -23,6 +25,7 @@ class App extends Component{
     }
   }
 
+  //Valida o cadastro/login do cliente
   handleValidation = () => {
     let email = this.state.email;
     let password = this.state.password;
@@ -34,6 +37,7 @@ class App extends Component{
     if(!email){
       formIsValid = false;
       errors["email"] = "Email não pode ser vazio";
+      alert("Email não pode ser vazio")
     }
 
     if(typeof email !== "undefined"){
@@ -48,6 +52,7 @@ class App extends Component{
         
         formIsValid = false;
         errors["email"] = "Email não válido";
+        alert("Digite um email válido")
       }
     }
 
@@ -55,18 +60,21 @@ class App extends Component{
     if(!password){
       formIsValid = false;
       errors["password"] = "Senha não pode ser vazia";
+      alert("Senha não pode ser vazia")
     }
 
     this.setState({errors: errors});
     return formIsValid;
   }
 
+  //Inicializa o banco de dados
   initDB = async () => {
     const response = await api.post("/api/dados/initDB")
     this.setState({isInitiated: true})
-    console.log(response)
+    //console.log(response)
   }
 
+  //Realiza o Sign in / login do usuário
   handleSign = async e => {
     e.preventDefault();
     const { email, password, errors } = this.state;
@@ -77,6 +85,7 @@ class App extends Component{
         this.setState({ postResponse: errors["password"] });
       }else{
         this.setState({ postResponse: "Preencha todos os dados para se cadastrar" });
+        alert("Preencha todos os dados para se cadastrar")
       }
     } else {
       try {
@@ -87,7 +96,7 @@ class App extends Component{
         this.props.history.push("/dashboard");
       } catch (err) {
         console.log(err);
-        this.setState({ postResponse: "Ocorreu um erro ao registrar ou logar sua conta. T.T" });
+        this.setState({ postResponse: "Ocorreu um erro ao registrar ou logar sua conta" });
       }
     }
   };
